@@ -1,0 +1,131 @@
+# Default values for kube-prometheus-stack.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+## Install Prometheus Operator CRDs
+##
+crds:
+  enabled: false
+
+## Configuration for alertmanager
+## ref: https://prometheus.io/docs/alerting/alertmanager/
+##
+alertmanager:
+
+  ## Deploy alertmanager
+  ##
+  enabled: false
+
+## Using default values from https://github.com/grafana/helm-charts/blob/main/charts/grafana/values.yaml
+##
+grafana:
+  enabled: true
+
+  initChownData:
+    enabled: false
+
+  ## Deploy default dashboards
+  ##
+  defaultDashboardsEnabled: false
+
+  adminPassword: PassW@rds!!
+
+  persistence:
+    enabled: true
+    storageClassName: sc-efs-monitor
+    accessModes:
+      - ReadWriteOnce
+    size: 20Gi
+
+  sidecar:
+    datasources:
+      enabled: false
+      defaultDatasourceEnabled: false
+      isDefaultDatasource: false
+
+      name: Prometheus
+      uid: prometheus
+
+      alertmanager:
+        enabled: false
+
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: k8s-role
+                operator: In
+                values:
+                  - 'mgmt'
+
+## Configuration for kube-state-metrics subchart
+##
+kube-state-metrics:
+  metricAnnotationsAllowList:
+    - pods=[*]
+  metricLabelsAllowlist:
+    - pods=[*]
+    - nodes=[*]
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: k8s-role
+                operator: In
+                values:
+                  - 'mgmt'
+
+## Manages Prometheus and Alertmanager components
+##
+prometheusOperator:
+  enabled: true
+
+  ## Assign custom affinity rules to the prometheus operator
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+  ##
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: k8s-role
+                operator: In
+                values:
+                  - 'mgmt'
+
+## Deploy a Prometheus instance
+##
+prometheus:
+  enabled: true
+
+  ## Settings affecting prometheusSpec
+  ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#prometheusspec
+  ##
+  prometheusSpec:
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: sc-efs-monitor
+          accessModes: [ "ReadWriteOnce" ]
+          resources:
+            requests:
+              storage: 50Gi
+
+    ## How long to retain metrics
+    ##
+    retention: 30d
+
+    ## Assign custom affinity rules to the prometheus instance
+    ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+    ##
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: k8s-role
+                  operator: In
+                  values:
+                    - 'mgmt'
