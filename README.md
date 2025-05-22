@@ -1,7 +1,7 @@
 # olions-public
 public assets
 
-
+```mermaid
 graph TD
     subgraph Azure Subscription
         subgraph Hub VNet (Shared Services & Connectivity)
@@ -30,3 +30,4 @@ graph TD
     I -- NSG --> J
     E -- NSG --> G
     E -- NSG --> I
+```
