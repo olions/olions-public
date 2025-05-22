@@ -7,7 +7,7 @@ graph TD
         subgraph Hub ["Shared Services & Connectivity"]
             A[Azure Firewall] --> B(DMZ Subnet)
             B --> C(Gateway Subnet)
-            C -- VPN/ExpressRoute --> D(On-Premises Network)
+            
             B --> E(Shared Services Subnet)
             E --> F(Azure AD Domain Services, DNS, Monitoring)
         end
@@ -25,6 +25,7 @@ graph TD
 
     Hub --- Peering --- Spoke1
     Hub --- Peering --- Spoke2
+    C -- VPN/ExpressRoute --> D(On-Premises Network)
 
     G -- NSG --> H
     I -- NSG --> J
