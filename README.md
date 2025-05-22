@@ -4,7 +4,7 @@ public assets
 ```mermaid
 graph TD
     subgraph Azure Subscription
-        subgraph Hub VNet (Shared Services & Connectivity)
+        subgraph Hub ["Shared Services & Connectivity"]
             A[Azure Firewall] --> B(DMZ Subnet)
             B --> C(Gateway Subnet)
             C -- VPN/ExpressRoute --> D(On-Premises Network)
@@ -12,19 +12,19 @@ graph TD
             E --> F(Azure AD Domain Services, DNS, Monitoring)
         end
 
-        subgraph Spoke VNet 1 (Application A)
+        subgraph Spoke1 ["Application A"]
             G(Application A Subnet 1)
             H(Application A Subnet 2)
         end
 
-        subgraph Spoke VNet 2 (Application B)
+        subgraph Spoke2 ["Application B"]
             I(Application B Subnet 1)
             J(Application B Subnet 2)
         end
     end
 
-    Hub VNet --- Peering --- Spoke VNet 1
-    Hub VNet --- Peering --- Spoke VNet 2
+    Hub --- Peering --- Spoke1
+    Hub --- Peering --- Spoke2
 
     G -- NSG --> H
     I -- NSG --> J
