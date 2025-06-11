@@ -1,3 +1,11 @@
+---
+name: Pull Request
+about: 코드 변경사항을 제안합니다
+title: '[PR] '
+labels: ''
+assignees: ''
+---
+
 ## 변경 사항 설명
 <!-- PR에서 변경된 내용을 자세히 설명해주세요 -->
 
